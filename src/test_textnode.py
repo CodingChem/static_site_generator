@@ -25,5 +25,10 @@ class TestTextNode(unittest.TestCase):
         self.assertEqual(node, node2)
 
 
+class TestTextNodeToLeafNode(unittest.TestCase):
+    # TODO:
+    pass
+
+
 if __name__ == "__main__":
     unittest.main()
