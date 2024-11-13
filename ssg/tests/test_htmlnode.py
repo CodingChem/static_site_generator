@@ -1,6 +1,6 @@
 import unittest
 
-from ssg.modules.html_node.htmlnode import HTMLNode
+from ssg.modules.html_node import HTMLNode
 
 
 class TestHTMLNode(unittest.TestCase):

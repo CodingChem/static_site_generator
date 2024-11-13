@@ -1,6 +1,6 @@
 import unittest
-from ssg.modules.html_node.parentnode import ParentNode
-from ssg.modules.html_node.leafnode import LeafNode
+from ssg.modules.html_node import ParentNode
+from ssg.modules.html_node import LeafNode
 
 
 class TestParentNode(unittest.TestCase):

@@ -1,6 +1,6 @@
 from enum import Enum
 
-from ..html_node.leafnode import LeafNode
+from ssg.modules.html_node import LeafNode
 
 
 class TextType(Enum):
@@ -30,18 +30,17 @@ class TextNode:
     def __repr__(self) -> str:
         return f"TextNode({self.text}, {self.text_type.value}, {self.url})"
 
-
-def text_node_to_html_node(text_node: TextNode):
-    match text_node.text_type:
-        case TextType.TEXT:
-            return LeafNode(None, text_node.text)
-        case TextType.BOLD:
-            return LeafNode("b", text_node.text)
-        case TextType.ITALIC:
-            return LeafNode("i", text_node.text)
-        case TextType.CODE:
-            return LeafNode("code", text_node.text)
-        case TextType.LINK:
-            return LeafNode("a", text_node.text, {"href": text_node.url})
-        case TextType.IMAGE:
-            return LeafNode("img", "", {"src": text_node.url, "alt": text_node.text})
+    def text_node_to_html_node(self) -> LeafNode:
+        match self.text_type:
+            case TextType.TEXT:
+                return LeafNode(None, self.text)
+            case TextType.BOLD:
+                return LeafNode("b", self.text)
+            case TextType.ITALIC:
+                return LeafNode("i", self.text)
+            case TextType.CODE:
+                return LeafNode("code", self.text)
+            case TextType.LINK:
+                return LeafNode("a", self.text, {"href": self.url})
+            case TextType.IMAGE:
+                return LeafNode("img", "", {"src": self.url, "alt": self.text})
