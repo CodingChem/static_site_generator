@@ -4,16 +4,6 @@ from .split_nodes import split_nodes_delimiter
 from .textnode import TextNode, TextType
 
 
-def markdown_to_blocks(markdown: str) -> list[str]:
-    blocks = []
-    strings = markdown.split("\n\n")
-    for line in strings:
-        if line.strip() == "":
-            continue
-        blocks.append(line.strip())
-    return blocks
-
-
 def text_to_textnode(text: str) -> list[TextNode]:
     # do bold before italics to avoid collisions,
     # similarly do images before links.
