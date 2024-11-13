@@ -1,6 +1,6 @@
 import unittest
 
-from leafnode import LeafNode
+from ssg.modules.html_node.leafnode import LeafNode
 
 
 class TestLeafNode(unittest.TestCase):

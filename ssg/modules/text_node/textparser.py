@@ -1,7 +1,7 @@
 import re
 
-from split_nodes import split_nodes_delimiter
-from textnode import TextNode, TextType
+from .split_nodes import split_nodes_delimiter
+from .textnode import TextNode, TextType
 
 
 def markdown_to_blocks(markdown: str) -> list[str]:

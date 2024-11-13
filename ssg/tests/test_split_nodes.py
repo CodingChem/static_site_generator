@@ -1,6 +1,6 @@
 import unittest
-from split_nodes import split_nodes_delimiter
-from textnode import TextNode, TextType
+from ssg.modules.text_node.split_nodes import split_nodes_delimiter
+from ssg.modules.text_node.textnode import TextNode, TextType
 
 
 class TestSplitNodesDelimiter(unittest.TestCase):

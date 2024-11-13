@@ -1,6 +1,7 @@
 import unittest
-from textnode import TextType, TextNode
-from textparser import (
+from ssg.modules.text_node.textnode import TextType, TextNode
+
+from ssg.modules.text_node.textparser import (
     extract_markdown_images,
     extract_markdown_links,
     markdown_to_blocks,
