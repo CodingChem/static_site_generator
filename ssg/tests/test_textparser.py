@@ -1,14 +1,121 @@
 import unittest
+from ssg.modules.html_node.leafnode import LeafNode
+from ssg.modules.html_node.parentnode import ParentNode
 from ssg.modules.text_node.textnode import TextType, TextNode
 
 from ssg.modules.text_node.block import markdown_to_blocks
 from ssg.modules.text_node.textparser import (
     extract_markdown_images,
     extract_markdown_links,
+    markdown_to_html_node,
     split_nodes_link,
     split_nodes_images,
     text_to_textnode,
 )
+
+
+class TestMarkdownToHtml(unittest.TestCase):
+    def test_paragraph_block(self):
+        markdown = """
+1
+
+2
+"""
+        expected = ParentNode(
+            "body",
+            [
+                ParentNode("p", [LeafNode(None, "1")]),
+                ParentNode("p", [LeafNode(None, "2")]),
+            ],
+        )
+        actual = markdown_to_html_node(markdown)
+        self.assertEqual(expected, actual)
+
+    def test_heading_block(self):
+        markdown = """
+# heading with *formatting*
+
+## subheading with multiple words
+"""
+        expected = ParentNode(
+            "body",
+            [
+                ParentNode(
+                    "h1", [LeafNode(None, "heading with "), LeafNode("i", "formatting")]
+                ),
+                ParentNode("h2", [LeafNode(None, "subheading with multiple words")]),
+            ],
+        )
+        actual = markdown_to_html_node(markdown)
+        self.assertEqual(expected, actual)
+
+    def test_code_block(self):
+        markdown = """
+```
+int i = 69;
+```
+"""
+        expected = ParentNode(
+            "body", [ParentNode("code", [LeafNode(None, "int i = 69;")])]
+        )
+        actual = markdown_to_html_node(markdown)
+        self.assertEqual(expected, actual)
+
+    def test_quote_block(self):
+        markdown = """
+>It is better to have lived
+>Than not"""
+        expected = ParentNode(
+            "body",
+            [
+                ParentNode(
+                    "blockquote",
+                    [LeafNode(None, "It is better to have lived\nThan not")],
+                )
+            ],
+        )
+        actual = markdown_to_html_node(markdown)
+        self.assertEqual(expected, actual)
+
+    def test_ordered_list(self):
+        markdown = """
+1. first
+2. second
+"""
+        expected = ParentNode(
+            "body",
+            [
+                ParentNode(
+                    "ol",
+                    [
+                        ParentNode("li", [LeafNode(None, "first")]),
+                        ParentNode("li", [LeafNode(None, "second")]),
+                    ],
+                )
+            ],
+        )
+        actual = markdown_to_html_node(markdown)
+        self.assertEqual(expected, actual)
+
+    def test_unordered_list(self):
+        markdown = """
+- first
+* second
+"""
+        expected = ParentNode(
+            "body",
+            [
+                ParentNode(
+                    "ul",
+                    [
+                        ParentNode("li", [LeafNode(None, "first")]),
+                        ParentNode("li", [LeafNode(None, "second")]),
+                    ],
+                )
+            ],
+        )
+        actual = markdown_to_html_node(markdown)
+        self.assertEqual(expected, actual)
 
 
 class TestExtractMarkdownImage(unittest.TestCase):

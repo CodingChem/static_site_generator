@@ -17,6 +17,16 @@ class HTMLNode:
     def to_html(self):
         raise NotImplementedError()
 
+    def __eq__(self, value: object, /) -> bool:
+        if not isinstance(value, self.__class__):
+            return False
+        return (
+            self.tag == value.tag
+            and self.value == value.value
+            and self.children == value.children
+            and self.props == value.props
+        )
+
     def props_to_html(self):
         if self.props is None:
             return ""

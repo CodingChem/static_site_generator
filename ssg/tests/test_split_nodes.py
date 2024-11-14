@@ -54,12 +54,6 @@ class TestSplitNodesDelimiter(unittest.TestCase):
         ]
         self.assertEqual(actual, expected)
 
-    def test_no_delimiter_in_text_raises(self):
-        nodes = [TextNode("nothing to see here", TextType.TEXT)]
-        self.assertRaises(
-            ValueError, lambda: split_nodes_delimiter(nodes, "*", TextType.BOLD)
-        )
-
 
 if __name__ == "__main__":
     unittest.main()

@@ -1,7 +1,76 @@
 import re
 
+from ssg.modules.html_node.parentnode import ParentNode
+from .block import BlockType, block_to_block_type, markdown_to_blocks
+
 from .split_nodes import split_nodes_delimiter
 from .textnode import TextNode, TextType
+
+
+def markdown_to_html_node(markdown: str) -> ParentNode:
+    blocks = markdown_to_blocks(markdown)
+    nodes = []
+    for block in blocks:
+        match block_to_block_type(block):
+            case BlockType.PARAGRAPH:
+                text_nodes = text_to_textnode(block)
+                nodes.append(
+                    ParentNode("p", [x.text_node_to_html_node() for x in text_nodes])
+                )
+            case BlockType.HEADING:
+                words = block.split(" ")
+                heading_level = len(words.pop(0))
+                text_nodes = text_to_textnode(" ".join(words))
+                nodes.append(
+                    ParentNode(
+                        f"h{heading_level}",
+                        [x.text_node_to_html_node() for x in text_nodes],
+                    )
+                )
+            case BlockType.CODE:
+                text_nodes = text_to_textnode(block.replace("```", "")[1:-1])
+                nodes.append(
+                    ParentNode("code", [x.text_node_to_html_node() for x in text_nodes])
+                )
+            case BlockType.QUOTE:
+                text_nodes = text_to_textnode(block.replace(">", ""))
+                nodes.append(
+                    ParentNode(
+                        "blockquote", [x.text_node_to_html_node() for x in text_nodes]
+                    )
+                )
+            case BlockType.UNORDERED_LIST:
+                children = []
+                for line in block.split():
+                    if line[1:] == "":
+                        continue
+                    children.append(
+                        ParentNode(
+                            "li",
+                            [
+                                x.text_node_to_html_node()
+                                for x in text_to_textnode(line)
+                            ],
+                        )
+                    )
+                nodes.append(ParentNode("ul", children))
+            case BlockType.ORDERED_LIST:
+                children = []
+                for line in block.split():
+                    if line[2:] == "":
+                        continue
+                    children.append(
+                        ParentNode(
+                            "li",
+                            [
+                                x.text_node_to_html_node()
+                                for x in text_to_textnode(line)
+                            ],
+                        )
+                    )
+                nodes.append(ParentNode("ol", children))
+
+    return ParentNode("body", nodes)
 
 
 def text_to_textnode(text: str) -> list[TextNode]:

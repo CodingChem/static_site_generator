@@ -22,8 +22,6 @@ def split_nodes_delimiter(
             else:
                 sub_nodes.append(TextNode(split, TextType.TEXT))
         new_nodes.extend(sub_nodes)
-    if len(new_nodes) == len(old_nodes):
-        raise ValueError("seperator not found in text")
     return new_nodes
 
 
