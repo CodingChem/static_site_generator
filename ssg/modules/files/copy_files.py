@@ -16,7 +16,7 @@ def copy_files(origin: str, target: str):
         if os.path.isfile(origin + entries):
             shutil.copy(origin + entries, target + entries)
         else:
-            copy_files(origin + entries, target + entries)
+            copy_files(origin + entries + "/", target + entries + "/")
 
 
 if __name__ == "__main__":
