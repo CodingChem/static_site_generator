@@ -1,10 +1,18 @@
 import re
 
-from ssg.modules.html_node.parentnode import ParentNode
+from modules.html_node.parentnode import ParentNode
 from .block import BlockType, block_to_block_type, markdown_to_blocks
 
 from .split_nodes import split_nodes_delimiter
 from .textnode import TextNode, TextType
+
+
+def extract_title(markdown):
+    lines = markdown.split("\n")
+    for line in lines:
+        if line.startswith("# "):
+            return line[2:]
+    raise Exception("No h1 in file!")
 
 
 def markdown_to_html_node(markdown: str) -> ParentNode:
@@ -41,8 +49,9 @@ def markdown_to_html_node(markdown: str) -> ParentNode:
                 )
             case BlockType.UNORDERED_LIST:
                 children = []
-                for line in block.split():
-                    if line[1:] == "":
+                for line in block.replace("- ", "* ").split("* "):
+                    line = line.strip()
+                    if line == "":
                         continue
                     children.append(
                         ParentNode(
@@ -56,7 +65,7 @@ def markdown_to_html_node(markdown: str) -> ParentNode:
                 nodes.append(ParentNode("ul", children))
             case BlockType.ORDERED_LIST:
                 children = []
-                for line in block.split():
+                for line in re.split(r"\d+\.\s", block):
                     if line[2:] == "":
                         continue
                     children.append(
@@ -76,7 +85,7 @@ def markdown_to_html_node(markdown: str) -> ParentNode:
 def text_to_textnode(text: str) -> list[TextNode]:
     # do bold before italics to avoid collisions,
     # similarly do images before links.
-    textnode = TextNode(text, TextType.TEXT)
+    textnode = TextNode(text.strip(), TextType.TEXT)
     return split_nodes_link(
         split_nodes_images(
             split_nodes_delimiter(

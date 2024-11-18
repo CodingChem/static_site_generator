@@ -7,11 +7,44 @@ from ssg.modules.text_node.block import markdown_to_blocks
 from ssg.modules.text_node.textparser import (
     extract_markdown_images,
     extract_markdown_links,
+    extract_title,
     markdown_to_html_node,
     split_nodes_link,
     split_nodes_images,
     text_to_textnode,
 )
+
+
+class TestExtractTitle(unittest.TestCase):
+    def test_find_simple_title(self):
+        markdown = "# Hello"
+        expected = "Hello"
+        actual = extract_title(markdown)
+        self.assertEqual(expected, actual)
+
+    def test_find_simple_title_in_larger_markdown(self):
+        markdown = """
+# Hello
+
+this is a longer block
+"""
+        expected = "Hello"
+        actual = extract_title(markdown)
+        self.assertEqual(expected, actual)
+
+    def test_title_is_not_first_block(self):
+        markdown = """
+granted this is wierdly formatted markdown,
+but here comes the:
+
+# Title"""
+        expected = "Title"
+        actual = extract_title(markdown)
+        self.assertEqual(expected, actual)
+
+    def test_no_title_raises(self):
+        markdown = "there is no title here"
+        self.assertRaises(Exception, lambda: extract_title(markdown))
 
 
 class TestMarkdownToHtml(unittest.TestCase):
